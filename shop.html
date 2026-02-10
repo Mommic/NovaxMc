@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novax Network Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a4d14 0%, #2d7a1f 100%);
+            padding: 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-bottom: 3px solid #3fa82f;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: #7dff5c;
+            text-shadow: 0 0 20px rgba(125, 255, 92, 0.5);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, #3fa82f 0%, #2d7a1f 100%);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 2px solid #3fa82f;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(63, 168, 47, 0.4);
+            background: linear-gradient(135deg, #4bbf38 0%, #3fa82f 100%);
+        }
+
+        .cart-count {
+            background: #ff4444;
+            padding: 0.3rem 0.7rem;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: #7dff5c;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: #1a1a1a;
+            border: 2px solid #2d7a1f;
+            color: #7dff5c;
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: linear-gradient(135deg, #2d7a1f 0%, #3fa82f 100%);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(63, 168, 47, 0.3);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .item-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+            border: 2px solid #2d7a1f;
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #2d7a1f, #7dff5c, #2d7a1f);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .item-card:hover::before {
+            opacity: 1;
+        }
+
+        .item-card:hover {
+            transform: translateY(-8px);
+            border-color: #3fa82f;
+            box-shadow: 0 12px 35px rgba(63, 168, 47, 0.4);
+        }
+
+        .item-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4444 100%);
+            color: #fff;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .item-badge.popular {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #000;
+        }
+
+        .item-badge.new {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+        }
+
+        .rank-icon {
+            width: 100%;
+            height: 140px;
+            background: #0f0f0f;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #2d7a1f;
+        }
+
+        .item-name {
+            font-size: 1.8rem;
+            color: #7dff5c;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .item-subtitle {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .item-features {
+            background: #0f0f0f;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #2d7a1f;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .feature:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            color: #7dff5c;
+            font-weight: bold;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #2d7a1f;
+        }
+
+        .item-price {
+            font-size: 2rem;
+            color: #7dff5c;
+            font-weight: bold;
+        }
+
+        .buy-btn {
+            background: linear-gradient(135deg, #3fa82f 0%, #2d7a1f 100%);
+            border: none;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .buy-btn:hover {
+            background: linear-gradient(135deg, #4bbf38 0%, #3fa82f 100%);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(63, 168, 47, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+            border: 3px solid #3fa82f;
+            border-radius: 15px;
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #2d7a1f;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #7dff5c;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2.5rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #7dff5c;
+            transform: rotate(90deg);
+        }
+
+        .cart-items {
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: #0f0f0f;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #2d7a1f;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            color: #7dff5c;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cart-item-details {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-price {
+            font-size: 1.4rem;
+            color: #7dff5c;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .remove-btn {
+            background: #ff4444;
+            border: none;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #ff6666;
+        }
+
+        .cart-total {
+            font-size: 1.8rem;
+            color: #7dff5c;
+            text-align: right;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #0f0f0f;
+            border-radius: 10px;
+            border: 2px solid #2d7a1f;
+        }
+
+        .checkout-section {
+            margin-top: 2rem;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            background: #0f0f0f;
+            border: 2px solid #2d7a1f;
+            padding: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: #3fa82f;
+            background: #1a1a1a;
+            transform: scale(1.05);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3fa82f 0%, #2d7a1f 100%);
+            border: none;
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .checkout-btn:hover {
+            background: linear-gradient(135deg, #4bbf38 0%, #3fa82f 100%);
+            box-shadow: 0 8px 30px rgba(63, 168, 47, 0.5);
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #aaa;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>⚡ NOVAX NETWORK SHOP</h1>
+            </div>
+            <div class="header-actions">
+                <div class="cart-btn" onclick="toggleCart()">
+                    🛒 Warenkorb
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="filterTab('all')">Alle Angebote</button>
+            <button class="tab-btn" onclick="filterTab('ranks')">Ränge</button>
+            <button class="tab-btn" onclick="filterTab('crystals')">Crystalle</button>
+            <button class="tab-btn" onclick="filterTab('bundles')">Bundles</button>
+            <button class="tab-btn" onclick="filterTab('pass')">Novax Pass</button>
+        </div>
+
+        <div class="items-grid" id="itemsGrid"></div>
+    </div>
+
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🛒 Dein Warenkorb</h2>
+                <button class="close-btn" onclick="toggleCart()">×</button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-total">
+                <strong>Gesamtsumme:</strong> <span id="cartTotal">0.00€</span>
+            </div>
+            <div class="checkout-section">
+                <h3 style="color: #7dff5c; margin-bottom: 1rem;">Zahlungsmethode wählen:</h3>
+                <div class="payment-methods">
+                    <div class="payment-method selected" data-method="paypal">
+                        💳 PayPal
+                    </div>
+                    <div class="payment-method" data-method="stripe">
+                        💳 Kreditkarte
+                    </div>
+                    <div class="payment-method" data-method="paysafe">
+                        🎫 Paysafecard
+                    </div>
+                    <div class="payment-method" data-method="klarna">
+                        🏦 Klarna
+                    </div>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Jetzt Kaufen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            // RÄNGE
+            {
+                id: 1,
+                name: 'Premium Rang',
+                icon: '⭐',
+                subtitle: 'Der perfekte Start',
+                price: 4.99,
+                category: 'ranks',
+                badge: 'Beliebt',
+                features: [
+                    'Premium Chat-Prefix',
+                    '3x Daily Rewards',
+                    'Zugang zu Premium Warps',
+                    '5 Home-Punkte',
+                    'Farbiger Chat-Name',
+                    'Premium Support'
+                ]
+            },
+            {
+                id: 2,
+                name: 'Diamant Rang',
+                icon: '💎',
+                subtitle: 'Für echte Profis',
+                price: 9.99,
+                category: 'ranks',
+                badge: 'Beliebt',
+                features: [
+                    'Alle Premium Features',
+                    '5x Daily Rewards',
+                    '/fly im Spawn',
+                    '10 Home-Punkte',
+                    'Diamant Chat-Prefix',
+                    'Exklusive Diamant Warps',
+                    'Pet System Zugang',
+                    'Priority Support'
+                ]
+            },
+            {
+                id: 3,
+                name: 'Titan Rang',
+                icon: '👑',
+                subtitle: 'Für die Elite',
+                price: 19.99,
+                category: 'ranks',
+                badge: 'Top Seller',
+                features: [
+                    'Alle Diamant Features',
+                    '10x Daily Rewards',
+                    '/fly überall',
+                    '20 Home-Punkte',
+                    'Titan Chat-Prefix & Farbe',
+                    'Exklusive Titan Warps',
+                    'Alle Pets freigeschalten',
+                    '/workbench unterwegs',
+                    'VIP Support'
+                ]
+            },
+            {
+                id: 4,
+                name: 'Omega Rang',
+                icon: '🔥',
+                subtitle: 'Ultimative Power',
+                price: 34.99,
+                category: 'ranks',
+                badge: 'Premium',
+                features: [
+                    'Alle Titan Features',
+                    '15x Daily Rewards',
+                    'Unbegrenzte Homes',
+                    'Omega Chat-Prefix mit Glow',
+                    '/enderchest überall',
+                    'Alle Cosmetics freigeschaltet',
+                    'Custom Join Message',
+                    'Priority Queue',
+                    'Dedicated Support'
+                ]
+            },
+            {
+                id: 5,
+                name: 'Novax Rang',
+                icon: '⚡',
+                subtitle: 'Das Beste vom Besten',
+                price: 59.99,
+                category: 'ranks',
+                badge: 'Exklusiv',
+                features: [
+                    'ALLE Features freigeschaltet',
+                    '25x Daily Rewards',
+                    'Novax Chat-Prefix (Animiert)',
+                    'Alle Commands verfügbar',
+                    'Exklusive Novax Lobby',
+                    '/nick für Custom Namen',
+                    'Beta Features Zugang',
+                    'Eigener Discord Rang',
+                    'Persönlicher VIP Support',
+                    'Lifetime Updates'
+                ]
+            },
+
+            // CRYSTALLE
+            {
+                id: 6,
+                name: '500 Crystalle',
+                icon: '💠',
+                subtitle: 'Starter Pack',
+                price: 2.99,
+                category: 'crystals',
+                features: [
+                    'Sofortige Gutschrift',
+                    'Nutze im Server-Shop',
+                    'Kaufe Cosmetics',
+                    'Trade mit Spielern'
+                ]
+            },
+            {
+                id: 7,
+                name: '1000 Crystalle',
+                icon: '💠',
+                subtitle: 'Beliebtes Paket',
+                price: 4.99,
+                category: 'crystals',
+                badge: 'Beliebt',
+                features: [
+                    'Sofortige Gutschrift',
+                    '+100 Bonus Crystalle',
+                    'Nutze im Server-Shop',
+                    'Kaufe Cosmetics',
+                    'Trade mit Spielern'
+                ]
+            },
+            {
+                id: 8,
+                name: '2000 Crystalle',
+                icon: '💠',
+                subtitle: 'Großes Paket',
+                price: 8.99,
+                category: 'crystals',
+                badge: 'Spare 10%',
+                features: [
+                    'Sofortige Gutschrift',
+                    '+300 Bonus Crystalle',
+                    'Nutze im Server-Shop',
+                    'Kaufe Premium Items',
+                    'Exklusive Deals'
+                ]
+            },
+            {
+                id: 9,
+                name: '3000 Crystalle',
+                icon: '💠',
+                subtitle: 'Mega Paket',
+                price: 12.99,
+                category: 'crystals',
+                badge: 'Spare 15%',
+                features: [
+                    'Sofortige Gutschrift',
+                    '+600 Bonus Crystalle',
+                    'Alle Shop-Vorteile',
+                    'VIP Crystal Badge',
+                    'Priority Trading'
+                ]
+            },
+            {
+                id: 10,
+                name: '5000 Crystalle',
+                icon: '💠',
+                subtitle: 'Ultra Paket',
+                price: 19.99,
+                category: 'crystals',
+                badge: 'Spare 20%',
+                features: [
+                    'Sofortige Gutschrift',
+                    '+1200 Bonus Crystalle',
+                    'Alle Premium Vorteile',
+                    'Elite Crystal Badge',
+                    'Exklusive Crystal Deals'
+                ]
+            },
+
+            // BUNDLES
+            {
+                id: 11,
+                name: 'Starter Bundle',
+                icon: '📦',
+                subtitle: 'Perfekter Einstieg',
+                price: 7.99,
+                category: 'bundles',
+                badge: 'Beliebt',
+                features: [
+                    'Premium Rang (30 Tage)',
+                    '500 Crystalle',
+                    '3x Loot Boxes',
+                    'Starter Cosmetic Pack',
+                    'Welcome Bonus'
+                ]
+            },
+            {
+                id: 12,
+                name: 'Power Bundle',
+                icon: '⚡',
+                subtitle: 'Maximale Power',
+                price: 24.99,
+                category: 'bundles',
+                badge: 'Top Deal',
+                features: [
+                    'Diamant Rang (Permanent)',
+                    '2000 Crystalle',
+                    '10x Premium Loot Boxes',
+                    'Elite Cosmetic Pack',
+                    'Exclusive Pet',
+                    '2x Boost Tokens'
+                ]
+            },
+            {
+                id: 13,
+                name: 'Ultimate Bundle',
+                icon: '🎁',
+                subtitle: 'Alles inklusive',
+                price: 49.99,
+                category: 'bundles',
+                badge: 'Beste Value',
+                features: [
+                    'Omega Rang (Permanent)',
+                    '5000 Crystalle',
+                    '25x Legendary Loot Boxes',
+                    'Complete Cosmetic Collection',
+                    '5x Exclusive Pets',
+                    '10x Boost Tokens',
+                    'Custom Particle Effect',
+                    'VIP Discord Access'
+                ]
+            },
+            {
+                id: 14,
+                name: 'Crystal Boost Bundle',
+                icon: '💎',
+                subtitle: 'Crystalle & Boosts',
+                price: 14.99,
+                category: 'bundles',
+                features: [
+                    '3000 Crystalle',
+                    '5x XP Boost (2h)',
+                    '3x Luck Boost (1h)',
+                    '10x Loot Boxes',
+                    'Boost Badge'
+                ]
+            },
+
+            // NOVAX PASS
+            {
+                id: 15,
+                name: 'Novax Pass - Season 1',
+                icon: '🎫',
+                subtitle: 'Exklusive Season Rewards',
+                price: 9.99,
+                category: 'pass',
+                badge: 'Limitiert',
+                features: [
+                    '50+ Unique Rewards',
+                    'Exklusive Cosmetics',
+                    'Season-Exclusive Pets',
+                    'Custom Emotes',
+                    'Special Chat Effects',
+                    'Pass Holder Badge',
+                    'Weekly Bonus Rewards',
+                    'XP Boost aktiv',
+                    'Early Access zu Updates',
+                    'Gültig für komplette Season'
+                ]
+            },
+            {
+                id: 16,
+                name: 'Novax Pass Premium',
+                icon: '🏆',
+                subtitle: 'Doppelte Rewards!',
+                price: 19.99,
+                category: 'pass',
+                badge: 'Premium',
+                features: [
+                    'ALLE Standard Pass Rewards',
+                    '2x Reward Speed',
+                    '100+ Premium Rewards',
+                    'Ultra-Rare Cosmetics',
+                    'Legendary Pets (3x)',
+                    'Animated Emotes',
+                    'Premium Chat Effects',
+                    'Gold Pass Badge',
+                    'Instant 10 Level Skip',
+                    'VIP Pass Holder Lounge',
+                    'Lifetime Season Archive'
+                ]
+            }
+        ];
+
+        let cart = [];
+        let currentTab = 'all';
+
+        function renderProducts() {
+            const grid = document.getElementById('itemsGrid');
+            const filtered = currentTab === 'all' 
+                ? products 
+                : products.filter(p => p.category === currentTab);
+
+            grid.innerHTML = filtered.map(product => `
+                <div class="item-card">
+                    ${product.badge ? `<div class="item-badge ${product.badge === 'Beliebt' || product.badge === 'Top Seller' ? 'popular' : product.badge === 'Neu' ? 'new' : ''}">${product.badge}</div>` : ''}
+                    <div class="rank-icon">${product.icon}</div>
+                    <div class="item-name">${product.name}</div>
+                    <div class="item-subtitle">${product.subtitle}</div>
+                    <div class="item-features">
+                        ${product.features.map(f => `
+                            <div class="feature">
+                                <span class="feature-icon">✓</span> ${f}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="item-footer">
+                        <div class="item-price">${product.price.toFixed(2)}€</div>
+                        <button class="buy-btn" onclick="addToCart(${product.id})">Kaufen</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts();
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCart();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        function updateCart() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartTotal').textContent = total.toFixed(2) + '€';
+
+            const cartItems = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">🛒 Dein Warenkorb ist leer</div>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.icon} ${item.name}</div>
+                            <div class="cart-item-details">Menge: ${item.quantity}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="cart-item-price">${(item.price * item.quantity).toFixed(2)}€</div>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">Entfernen</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleCart() {
+            document.getElementById('cartModal').classList.toggle('active');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('🛒 Dein Warenkorb ist leer!');
+                return;
+            }
+
+            const method = document.querySelector('.payment-method.selected').dataset.method;
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            alert(`✅ Weiterleitung zur Zahlung...\n\nZahlungsmethode: ${method}\nBetrag: ${total.toFixed(2)}€\n\nVielen Dank für deinen Kauf bei Novax Network! 🎮`);
+            
+            cart = [];
+            updateCart();
+            toggleCart();
+        }
+
+        // Payment selection
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('payment-method')) {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Initialize
+        renderProducts();
+        updateCart();
+    </script>
+</body>
+</html>
