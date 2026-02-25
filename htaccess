@@ -1,0 +1,16 @@
+# Clean URLs für NovaxMc.de
+# Entfernt .html von allen URLs
+
+# Aktiviere Rewrite Engine
+RewriteEngine On
+
+# Wenn die Datei mit .html existiert, leite um
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# Entferne .html aus der URL wenn vorhanden
+RewriteCond %{THE_REQUEST} ^GET\ /[^?\s]+\.html
+RewriteRule (.*)\.html$ /$1 [R=301,L]
+
+# Fehlerseite
+ErrorDocument 404 /404.html
